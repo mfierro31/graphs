@@ -46,9 +46,15 @@ class Graph {
   depthFirstSearch(start) {
     let toVisitStack = [start];
     let seen = new Set(toVisitStack);
+    let visited = [];
 
     while (toVisitStack.length) {
       let currVal = toVisitStack.pop();
+      // IMPORTANT: push the values into visited HERE, and NOT in the if block below, otherwise the order will be messed up.
+      // In that if block, we're looping through the adjacent nodes of the currVal and adding them to our toVisitStack,
+      // so if we add our push line there, we'll store them in a 2 at a time swapped order than we actually visited them.
+      // So, ["P", "U", "X", "T"] in toVisitStack will be ["U", "P", "T", "X"] in visited.
+      visited.push(currVal.value);
       for (let neighbor of currVal.adjacent) {
         if (!seen.has(neighbor)) {
           toVisitStack.push(neighbor);
@@ -57,8 +63,7 @@ class Graph {
       }
     }
 
-    console.log(Array.from(seen).map(v => v.value));
-    return Array.from(seen).map(v => v.value);
+    return visited;
   }
 
   // this function returns an array of Node values using BFS
